@@ -1,0 +1,7 @@
+# Environment #
+.idea/
+__pycache__/
+env/
+
+# Secrets #
+secrets.py
