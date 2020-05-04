@@ -7,7 +7,7 @@ from secrets import NY_TIMES_CREDENTIALS
 POST_LOGIN_URL = 'https://myaccount.nytimes.com/auth/login/'
 LEADERBOARD_URL = 'https://www.nytimes.com/puzzles/leaderboards'
 
-LEADERBOARD_ROW_DELIMITER = '•'
+LEADERBOARD_ROW_DELIMITER = '\n'
 
 
 class NYTLeaderboard(object):
@@ -51,11 +51,16 @@ class NYTLeaderboard(object):
 
     def parse_leaderboard_text(self, leaderboard_text):
         rows = leaderboard_text.split(LEADERBOARD_ROW_DELIMITER)
+        solvers = self.chunks(rows, 3)
         leaderboard_details = []
-        for row in rows:
-            stats = row.split('\n')
-            leaderboard_details.append(SolverStats(stats[0], stats[1], stats[2]))
+        for solver in solvers:
+            leaderboard_details.append(SolverStats(solver[0], solver[1], solver[2]))
         return leaderboard_details
+
+    @staticmethod
+    def chunks(l, n):
+        n = max(1, n)
+        return (l[i:i + n] for i in range(0, len(l), n))
 
 
 class SolverStats(object):
